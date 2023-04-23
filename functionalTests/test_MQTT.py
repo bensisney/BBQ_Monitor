@@ -6,7 +6,7 @@ import paho.mqtt.publish as publish
 # MQTT 
 mqttBroker = '10.0.10.34'
 mqttPort = 1883
-mqttTestMessage = 'test/testMessage'
+mqttTopic = 'test/testMessage'
 mqttDelay = 5
 mqttUser = 'test'
 mqttPass = 'test'
@@ -38,7 +38,7 @@ try:
     while 1:
         testMessage = '{}: {}'.format("Hello MQTT World", messageCount)
         print('Sending Message "{}"'.format(testMessage)) 
-        client.publish(mqttTestMessage,testMessage)
+        client.publish(mqttTopic,testMessage)
         messageCount = messageCount + 1
         time.sleep(10)
 except KeyboardInterrupt:
