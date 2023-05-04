@@ -1,5 +1,5 @@
-# Driver TEsts
-These scripts test the core features of the BBQ monitor using the driver modules.
+# Modules Tests
+These scripts test the core features of the BBQ monitor using the modules.
 
 Use this scripts to debug and prove that the following features of the BBQ monitor are working through the driver module access.
 

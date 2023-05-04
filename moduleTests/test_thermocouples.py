@@ -3,7 +3,7 @@ import sys
 # append the path of the parent directory
 sys.path.append("..")
 
-import drivers.thermocouples as tc
+import modules.thermocouples as tc
 
 channels = [0, 1, 2, 3]
 

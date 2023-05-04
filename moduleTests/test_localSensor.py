@@ -3,7 +3,7 @@ import sys
 # append the path of the parent directory
 sys.path.append("..")
 
-import drivers.localSensor as local
+import modules.localSensor as local
 
 print(f"{local.getTemperature()} (°C)")
 print(f"{local.getTemperature('F')} (°F)")

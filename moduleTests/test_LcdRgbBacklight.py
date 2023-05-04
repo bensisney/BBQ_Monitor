@@ -4,7 +4,7 @@ import sys
 sys.path.append("..")
 
 from time import sleep
-import drivers.lcdRgbBacklight as lcdRGB
+import modules.lcdRgbBacklight as lcdRGB
 
 SLEEP_TIME = 1
 

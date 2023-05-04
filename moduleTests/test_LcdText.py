@@ -4,7 +4,7 @@ import sys
 sys.path.append("..")
 
 from time import sleep
-import drivers.lcdText as lcdText
+import modules.lcdText as lcdText
 
 TEST_MESSAGE = "LCD TEST\n4 Lines\n20 Characters\n12345678901234567890"
 SLEEP_TIME = 5
