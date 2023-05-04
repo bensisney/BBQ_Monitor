@@ -2,6 +2,13 @@ import board
 import busio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
+import pathlib
+import configparser
+
+# read config file
+configPath = pathlib.Path(__file__).parents[1] / "config.cfg"
+config = configparser.ConfigParser()
+config.read(configPath)
 
 # Create the I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -32,27 +39,27 @@ def correctRawThermocoupleTemp(rawTemp,channel):
     https://learn.adafruit.com/calibrating-sensors/two-point-calibration
     """
     # TO DO: Pull these in from a config file
-    chan0RawLow = 0
-    chan0RawHigh = 100
+    chan0RawLow = config.getfloat('Thermocouple Calibration','chan0RawLow')
+    chan0RawHigh = config.getfloat('Thermocouple Calibration','chan0RawHigh')
     chan0RawRange = chan0RawHigh - chan0RawLow
     
     # TO DO: Pull these in from a config file
-    chan1RawLow = 0.12
-    chan1RawHigh = 98.24
+    chan1RawLow = config.getfloat('Thermocouple Calibration','chan1RawLow')
+    chan1RawHigh = config.getfloat('Thermocouple Calibration','chan1RawHigh')
     chan1RawRange = chan1RawHigh - chan1RawLow
 
     # TO DO: Pull these in from a config file
-    chan2RawLow = 1.63
-    chan2RawHigh = 98.66
+    chan2RawLow = config.getfloat('Thermocouple Calibration','chan2RawLow')
+    chan2RawHigh = config.getfloat('Thermocouple Calibration','chan2RawHigh')
     chan2RawRange = chan2RawHigh - chan2RawLow
     
     # TO DO: Pull these in from a config file
-    chan3RawLow = 0
-    chan3RawHigh = 100
+    chan3RawLow = config.getfloat('Thermocouple Calibration','chan3RawLow')
+    chan3RawHigh = config.getfloat('Thermocouple Calibration','chan3RawHigh')
     chan3RawRange = chan3RawHigh - chan3RawLow
 
-    referenceLow = 0.01
-    referenceHigh = 99 #based on elevation in Austin,Tx
+    referenceLow = config.getfloat('Thermocouple Calibration','referenceLow')
+    referenceHigh = config.getfloat('Thermocouple Calibration','referenceHigh')
     referenceRange = referenceHigh - referenceLow
     
     if channel == 0:

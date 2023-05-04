@@ -2,6 +2,8 @@ import drivers.thermocouples as tc
 import drivers.localSensor as local
 import drivers.lcdRgbBacklight as lcdRGB
 import drivers.lcdText as lcdText
+import drivers.mqttLocal as mqttLocal
+import drivers.mqttCloud as mqttCloud
 from datetime import datetime
 from time import sleep
 
@@ -30,7 +32,8 @@ def readDHT():
 
 def publishMQTT():
     if DEBUG_PRINT: print(f'{datetime.now().strftime(timeFormat)} - Publishing to MQTT')
-    # Do Something here
+    mqttLocal.publishTemps(pitTemp,foodTemp,localTemp,localHumidity)
+    mqttCloud.publishTemps(pitTemp,foodTemp,localTemp,localHumidity)
 
 def logData():
     if DEBUG_PRINT: print(f'{datetime.now().strftime(timeFormat)} - Logging Data')

@@ -1,15 +1,15 @@
 # Imports
-from time import sleep
-import paho.mqtt.client as mqttClient
-import paho.mqtt.publish as mqttPublish
+import time
+import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 
 # MQTT 
-mqttBroker = '10.0.10.34'
-mqttPort = 1883
+mqttBroker = '0.0.0.0'
+mqttPort = 0
+mqttTopic = 'test/testMessage'
 mqttUser = 'test'
 mqttPass = 'test'
-
-client = mqttClient.Client("ha-client")
+mqttDelay = 5
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -22,17 +22,26 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
 
-def init():
+# Main Program
+try:
+    client = mqtt.Client("ha-client")
     client.on_connect = on_connect
     client.on_message = on_message
     client.username_pw_set(mqttUser,mqttPass)
     client.connect(mqttBroker, mqttPort)
     client.loop_start()
     # give the MQTT client time to start
-    sleep(2)
+    time.sleep(2)
+    
+    messageCount = 0
 
-def publish(topic,message):
-    client.publish(topic,message)
-
-def stop():
+    while 1:
+        testMessage = '{}: {}'.format("Hello MQTT World", messageCount)
+        print('Sending Message "{}"'.format(testMessage)) 
+        client.publish(mqttTopic,testMessage)
+        messageCount = messageCount + 1
+        time.sleep(10)
+except KeyboardInterrupt:
+    print()
+    print("\nStopping Program")
     client.loop_stop()

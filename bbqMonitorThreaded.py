@@ -2,13 +2,21 @@ import drivers.thermocouples as tc
 import drivers.localSensor as local
 import drivers.lcdRgbBacklight as lcdRGB
 import drivers.lcdText as lcdText
+import drivers.mqttLocal as mqttLocal
+import drivers.mqttCloud as mqttCloud
+import modules.csvlog as csvlog
 from threading import Thread
 from datetime import datetime
 from time import sleep
 import time
+import configparser
+
+# read config file
+configPath = "config.cfg"
+config = configparser.ConfigParser()
+config.read(configPath)
 
 # Global Variable Init
-DEBUG_PRINT = False
 pitAdcChannel = 1
 foodAdcChannel = 2
 pitTemp = 0
@@ -19,18 +27,18 @@ startTime = 0
 timeFormat = "%m/%d/%y %H:%M:%S.%f"
 
 # How often each thread happens in seconds
-TC_INTERVAL = 10.0
-DHT_INTERVAL = 10.0
-DISPLAY_INTERVAL = 5.0
-MQTT_INTERVAL = 30.0
-LOG_INTERVAL = 120.0
+TC_INTERVAL = config.getfloat('Program Settings','tcInterval')
+DHT_INTERVAL = config.getfloat('Program Settings','dhtInterval')
+DISPLAY_INTERVAL = config.getfloat('Program Settings','displayInterval')
+MQTT_INTERVAL = config.getfloat('Program Settings','mqttInterval')
+LOG_INTERVAL = config.getfloat('Program Settings','logInterval')
 
 # Functions
 def sleepTime(interval):
     return (interval - ((time.time() - startTime) % interval))
 
 def readThermocouples():
-    if DEBUG_PRINT: (f'{datetime.now().strftime(timeFormat)} - Reading TCs')
+    if __debug__: print(f'{datetime.now().strftime(timeFormat)} - Reading TCs')
     global pitTemp
     pitTemp = tc.getThermocoupleTemp(pitAdcChannel,'F')
     global foodTemp
@@ -42,7 +50,7 @@ def updateThermocouples():
         sleep(sleepTime(TC_INTERVAL))
 
 def readDHT():
-    if DEBUG_PRINT: print(f'{datetime.now().strftime(timeFormat)} - Reading DHT')
+    if __debug__: print(f'{datetime.now().strftime(timeFormat)} - Reading DHT')
     global localTemp
     localTemp = local.getTemperature('F')
     global localHumidity
@@ -55,19 +63,20 @@ def updateDHT():
 
 def publishMQTT():
     while True:
-        if DEBUG_PRINT: print(f'{datetime.now().strftime(timeFormat)} - Publishing to MQTT')
+        if __debug__: print(f'{datetime.now().strftime(timeFormat)} - Publishing to MQTT')
+        mqttLocal.publishTemps(pitTemp,foodTemp,localTemp,localHumidity)
+        mqttCloud.publishTemps(pitTemp,foodTemp,localTemp,localHumidity)
         sleep(sleepTime(MQTT_INTERVAL))
-        # Do Something here
 
 def logData():
     while True:
-        if DEBUG_PRINT: print(f'{datetime.now().strftime(timeFormat)} - Logging Data')
+        if __debug__: print(f'{datetime.now().strftime(timeFormat)} - Logging Data')
+        csvlog.updateLog(pitTemp,foodTemp,localTemp,localHumidity)
         sleep(sleepTime(LOG_INTERVAL))
-        # Do something here
 
 def updateDisplay():
     while True:
-        if DEBUG_PRINT: print(f'{datetime.now().strftime(timeFormat)} - Updating Display')
+        if __debug__: print(f'{datetime.now().strftime(timeFormat)} - Updating Display')
         screenLine1 = f"PIT TEMP   : {pitTemp:.2f} F\n"
         screenLine2 = f"FOOD TEMP  : {foodTemp:.2f} F\n"
         screenLine3 = f"LOCAL TEMP : {localTemp:.2f} F\n"
@@ -77,10 +86,12 @@ def updateDisplay():
         sleep(sleepTime(DISPLAY_INTERVAL))
 
 def init():
-    print(f'{datetime.now().strftime(timeFormat)} - Initializing')
+    if __debug__: print(f'{datetime.now().strftime(timeFormat)} - Initializing')
     lcdText.clear()
     lcdRGB.setColor("White")
     lcdText.update("\nInitializing")
+    mqttLocal.init()
+    csvlog.createLog(config.get('Program Settings','csvLogDir'))
     readThermocouples()
     readDHT()
     lcdRGB.setColor("green")

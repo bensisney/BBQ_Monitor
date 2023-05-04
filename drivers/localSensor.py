@@ -12,6 +12,9 @@ def convertCtoF(tempC):
     return tempF
 
 def getTemperature(unit = "C"):
+    """
+    Gets and returns the temperature from the DHT22
+    """
     while True:
         try:
             temperature_c = dhtDevice.temperature
@@ -29,6 +32,9 @@ def getTemperature(unit = "C"):
             raise error
     
 def getHumidity():
+    """
+    Gets and returns the humidity from the DHT22
+    """
     while True:
         try:
             humidity = dhtDevice.humidity

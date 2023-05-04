@@ -1,6 +1,3 @@
-"""
-TO DO
-"""
 import RPi.GPIO as GPIO
 
 # Pin Numbers are BCM numbered, not Board Numbered
@@ -9,7 +6,10 @@ BLUE_PIN = 27
 GREEN_PIN = 22
 
 # Setup GPIO
-GPIO.setwarnings(True)
+if __debug__: 
+    GPIO.setwarnings(True)
+else:
+    GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(RED_PIN,GPIO.OUT)
 GPIO.setup(BLUE_PIN,GPIO.OUT)
@@ -21,6 +21,7 @@ blue_pwm = GPIO.PWM(BLUE_PIN,100)
 green_pwm = GPIO.PWM(GREEN_PIN,100)
 
 # Define some preset colors, data is stored in RGB order.
+# Data is stored as dictionary of lists.
 BACKLIGHT_COLORS = {'red':      [100, 0, 0],
                     'blue':     [0, 0, 100],
                     'green':    [0, 100, 0],
@@ -33,20 +34,22 @@ BACKLIGHT_COLORS = {'red':      [100, 0, 0],
 
 def percentToDuty(percent):
     """
-    TO DO
+    A helper function to convert a human readable brightness as percentage
+    into a PWM percentage. 
+        EX:  70% Brightness = 30% Dutycycle
+        EX: 100% Brightness =  0% Dutycycle
     """
     dutyCycle = 100 - percent
     return dutyCycle
 
 def setColor(color, brightness = 100):
     """
-    TO DO
+    Sets the screen to a predefined color.
     """
-    # TO DO: Add error handling for if color isn't defined
-    
     # Get color from dictionary
+    # TO DO: Add error handling for if color isn't defined
     rgbValues = BACKLIGHT_COLORS[color.lower()]
-    
+
     # Set Colors
     red_pwm.start(percentToDuty(rgbValues[0] * brightness/100))
     green_pwm.start(percentToDuty(rgbValues[1] * brightness/100))
@@ -54,7 +57,8 @@ def setColor(color, brightness = 100):
 
 def setRGB(percent_red, percent_green, percent_blue):
     """
-    TO DO
+    Sets the color in percent of RGB values. 
+    Allows the user to set custom colors
     """
     red_pwm.start(percentToDuty(percent_red))
     green_pwm.start(percentToDuty(percent_green))
@@ -62,7 +66,7 @@ def setRGB(percent_red, percent_green, percent_blue):
 
 def turnOff():
     """
-    TO DO
+    Turns off the RGB screen by setting the PWM to 100%
     """
     red_pwm.start(100)
     green_pwm.start(100)
@@ -70,6 +74,6 @@ def turnOff():
 
 def cleanup():
     """
-    TO DO
+    Calls the GPIO cleanup function
     """
     GPIO.cleanup()

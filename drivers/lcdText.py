@@ -1,6 +1,3 @@
-"""
-??
-"""
 import board
 import adafruit_character_lcd.character_lcd_i2c as character_lcd
 
@@ -16,9 +13,15 @@ lcd = character_lcd.Character_LCD_I2C(i2c, LCD_COLUMNS, LCD_ROWS)
 
 # Initalize Functions
 def clear():
+    """
+    Clears the LCD screen
+    """
     lcd.clear()
 
 def update(message):
+    """
+    Updates the LCD screen with the provided message
+    """
     lcd.message = message
 
 # Clear The Screen

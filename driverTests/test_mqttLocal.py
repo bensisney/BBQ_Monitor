@@ -4,7 +4,7 @@ from time import sleep
 # append the path of the parent directory
 sys.path.append("..")
 
-import drivers.mqtt as mqtt
+import drivers.mqttLocal as mqtt
 
 mqttTopic = 'test/testMessage'
 
