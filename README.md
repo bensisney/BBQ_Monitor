@@ -1,17 +1,17 @@
 # BBQ_Monitor
 Python Code to monitor my BBQ Smoker. This project leverages Adafruit Hardware and Software. It's assembeld with a custom PCB.
 
-- To get the pit and meat temperatures, the pi reads from a 4 channel ADC, each of those channels can be connected to a thermocouple amplifier. In my current setup I'm only using 2 of the 4 channels.
-- To get the local environmental conditions, the pi reads from a combination temperature and humidity sensor mounted to the PCB with the pi.
+- To get the pit and meat temperatures, the Raspberry Pi Zero W reads from a 4 channel ADC, each of those channels can be connected to a thermocouple amplifier.
+- To get the local environmental conditions, the pi reads from a combination temperature and humidity sensor mounted to the PCB with the Raspberry Pi Zero W.
 - The data is published via MQTT to both a local dashboard (Home Assistant) and a cloud Dashboard (ThingSpeak) for web/phone viewing.
 - The data is diplayed locally to the pi on a LCD character display with a RGB backlight for status alerts.
 - The data is saved to a *.csv file on the pi itself.
 
 ## Hardware Overview
 - RaspberryPi Zero W
-- DHT22
-- ADS1115
-- AD8495
+- DHT22 (Temperature and Humidity Sensor)
+- ADS1115 (4 Channel ADC)
+- AD8495 (Thermocouple Amplifier)
 - 20x4 Character LCD
 - Custom PCB
 - Various Connectors / Passive devices.
